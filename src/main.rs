@@ -1,5 +1,7 @@
 
 mod data_structures {
+    use std::mem;
+
     pub struct LinkedList<T> {
         length: u32,
         list: Box<List<T>>,
@@ -14,8 +16,13 @@ mod data_structures {
         }
         pub fn push(&mut self, elem: T) {
             self.length += 1;
-            self.list = Box::new(List::Nil);
-            //self.list = Box::new(List::Cons(elem, self.list));
+            //self.list = Box::new(List::Nil);
+            /*
+            let tmp_list = mem::replace(&mut self.list, Box::new(List::Nil));
+            self.list = Box::new(List::Cons(elem, tmp_list));
+            */
+            let tmp_list = mem::replace(&mut *self.list, List::Nil);
+            *self.list = List::Cons(elem, Box::new(tmp_list));
         }
         /*
            fn pop(&mut self) -> T {
